@@ -1,7 +1,7 @@
 import tweepy
-import BeautifulSoup
 import pprint
 import random
+import crawl
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -22,6 +22,26 @@ api = tweepy.API(auth)
 mentions_id_cache = set()
 replies = set()
 
+db = crawl.FlyCircuitDB()
+
+TWITTER_MAX_LENGTH = 140
+
+fields = ['Name', 'Author', 'Gender/Age', 'Putative birth time', 'Soma Coordinate', 'Driver', 'Lineage', 'Putative neurotransmitter', 'Stock']
+
+def tweetNeuron(neuron, mention):
+    tag = '@' + mention.user.screen_name + '\n  '
+    fieldTexts = ['\n' + field + ': ' + neuron[field] for field in fields]
+    i = 0
+    tweet = tag
+    while i < len(fieldTexts):
+        fieldText = fieldTexts[i]
+        if len(tweet) + len(fieldText) < TWITTER_MAX_LENGTH:
+            tweet += fieldText
+            i += 1
+        else:
+            api.update_status(tweet, mention.id)
+            tweet = tag
+    api.update_status(tweet, mention.id)
 
 def reply():
     mentions = api.mentions_timeline() # type: tweepy.models.ResultSet
@@ -37,17 +57,27 @@ def reply():
         # strip text of @<user>s
         text = ' '.join(word for word in text.split(' ') if word[0] != '@')
 
-        reply = '@' + mention.user.screen_name + ' ' + parse(text)
-        print reply
-
         try:
-            api.update_status(reply, mention.id)
-        except tweepy.error.TweepError:
+            tweetNeuron(parse(text), mention)
+        except ValueError as e: # type: ValueError
+            api.update_status('@' + mention.user.screen_name + ' ' + str(e) + str(random.random()))
+        except tweepy.error.TweepError as e:
+            print(str(e))
             pass
 
 
+
 def parse(text):
-    return text + ' replied' + str(random.random())
+    neuron = 'Cha-F-800070'
+    text = neuron
+    try:
+        print 'neuron: ' + text
+        return db.parse_neuron(text)
+    except ValueError as e:
+        raise ValueError('Please tweet us the name of a fruit fly neuron')
+    pp.pprint(ret)
+    #return text + ' replied' + str(random.random()) + '\n' + str(ret)
+    return '\n' + '\n'.join(field + ': ' + ret[field] for field in fields)
 
 
 if __name__ == '__main__':
