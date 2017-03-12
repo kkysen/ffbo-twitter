@@ -2,12 +2,9 @@ import tweepy
 import pprint
 import random
 import crawl
+import time
 
 pp = pprint.PrettyPrinter(indent=4)
-
-a = tweepy.models.ResultSet
-b = tweepy.models.Status
-
 
 CONSUMER_KEY = 'P9npViwfoDDj8NY0rJNDX5xYD'
 CONSUMER_SECRET = 'KyBbmRI1uAyQZgOVDTznd138xkDXO8dspWhkpTsmDlZRivMaba'
@@ -29,7 +26,7 @@ TWITTER_MAX_LENGTH = 140
 fields = ['Name', 'Author', 'Gender/Age', 'Putative birth time', 'Soma Coordinate', 'Driver', 'Lineage', 'Putative neurotransmitter', 'Stock']
 
 def tweetNeuron(neuron, mention):
-    tag = '@' + mention.user.screen_name + '\n  '
+    tag = '@' + mention.user.screen_name + '\n'
     fieldTexts = ['\n' + field + ': ' + neuron[field] for field in fields]
     i = 0
     tweet = tag
@@ -69,16 +66,15 @@ def reply():
 
 def parse(text):
     neuron = 'Cha-F-800070'
-    text = neuron
+    #text = neuron
     try:
         print 'neuron: ' + text
         return db.parse_neuron(text)
     except ValueError as e:
         raise ValueError('Please tweet us the name of a fruit fly neuron')
     pp.pprint(ret)
-    #return text + ' replied' + str(random.random()) + '\n' + str(ret)
-    return '\n' + '\n'.join(field + ': ' + ret[field] for field in fields)
-
 
 if __name__ == '__main__':
-    reply()
+    while True:
+        reply()
+        time.sleep(30)
