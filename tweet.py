@@ -46,7 +46,7 @@ def reply():
         # check if already replied to
         if mention.id in mentions_id_cache:
             break
-        mentions_id_cache.add(id)
+        mentions_id_cache.add(mention.id)
 
         #pp.pprint(mention.__dict__)
 
