@@ -6,10 +6,10 @@ import time
 
 pp = pprint.PrettyPrinter(indent=4)
 
-CONSUMER_KEY = 'P9npViwfoDDj8NY0rJNDX5xYD'
-CONSUMER_SECRET = 'KyBbmRI1uAyQZgOVDTznd138xkDXO8dspWhkpTsmDlZRivMaba'
-ACCESS_KEY = '840999689294106624-I9F78QJOhha9qTxQglR3twqdWbt1kzj'
-ACCESS_SECRET = 'oAP1LacIK5NCdTfKgDJdncHmNxLSE7VsZFnixi9p6REoJ'
+CONSUMER_KEY = ''
+CONSUMER_SECRET = ''
+ACCESS_KEY = ''
+ACCESS_SECRET = ''
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
